@@ -1,0 +1,74 @@
+OrcaBot_MultiOperacion/
+├── .env.encrypted
+├── config/
+│   ├── __init__.py				ok
+│   ├── security_config.py			ok
+│   ├── trading_config.py			ok
+│   └── timeframes_config.py			ok
+│   └--	ml_config.py				ok
+├── core/
+│   ├── __init__.py				ok
+│   ├── blockchain/
+│   │   ├── __init__.py				ok
+│   │   ├── connection_manager.py		ok
+│   │   ├── wallet_manager.py			ok
+│   │   ├── orca_integration.py			ok
+│   │   ├── transaction_executor.py		ok
+│   │   └── whirlpool_scanner.py		ok
+│   ├── ml_engine/
+│   │   ├── __init__.py				ok
+│   │   ├── lstm_predictor.py			ok
+│   │   ├── feature_extractor.py		ok
+│   │   ├── probability_calculator.py		ok
+│   │   ├── training_pipeline.py		ok
+│   │   └── data_pipeline.py          # NUEVO	ok
+│   ├── trading/
+│   │   ├── __init__.py				ok
+│   │   ├── multi_operation_manager.py		ok
+│   │   ├── position_tracker.py			ok
+│   │   ├── risk_zero_calculator.py		ok
+│   │   ├── stop_loss_manager.py		ok
+│   │   ├── signal_generator.py			ok
+│   │   └── capital_manager.py        # NUEVO	ok
+│   └── scheduler/
+│       ├── __init__.py				ok
+│       ├── timeframe_manager.py		ok
+│       └── operation_scheduler.py		ok
+├── security/
+│   ├── __init__.py				ok
+│   ├── env_encryptor.py			ok
+│   ├── key_manager.py				ok
+│   ├── audit_logger.py				ok
+│   └── anomaly_detector.py			ok
+├── communication/
+│   ├── __init__.py				ok
+│   ├── telegram_bridge.py            # NUEVO	ok
+│   ├── status_reporter.py			ok
+│   └── alert_manager.py			ok
+├── utils/
+│   ├── __init__.py				ok
+│   ├── data_pipeline.py              # NUEVO
+│   ├── performance_monitor.py        # NUEVO	ok
+│   ├── error_handler.py              # NUEVO	ok
+│   └── backup_manager.py			ok
+├── logs/
+├── data/
+│   ├── training/
+│   ├── live/
+│   └── signals/
+├── scripts/
+│   ├── __init__.py				ok
+│   ├── setup_environment.py          # NUEVO	ok
+│   ├── encrypt_env_vars.py			ok
+│   └── test_blockchain.py            # NUEVO	ok
+├── tests/                            # Directorio para tests
+│   ├── __init__.py				ok
+│   ├── test_blockchain.py			ok
+│   ├── test_ml.py				ok
+│   └── test_trading.py				ok
+├── main.py					ok
+├── requirements.txt                  # ACTUALIZADO	ok
+├── Makefile                          # NUEVO	ok
+├── Dockerfile                        # NUEVO	ok
+├── README.md					ok
+└── .gitignore

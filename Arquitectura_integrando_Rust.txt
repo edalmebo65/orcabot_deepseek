@@ -1,0 +1,14 @@
+Orcabot_deepseek/
+├── python/
+│   ├── main.py              # Bot principal Python	ok
+│   ├── requirements.txt     # Dependencias Python	ok
+│   └── rust_bridge.py      # Puente Python-Rust	ok
+├── rust/
+│   ├── Cargo.toml          # Configuración Rust	ok
+│   ├── src/
+│   │   ├── lib.rs          # Librería principal	ok
+│   │   ├── orca_client.rs  # Cliente Orca		ok
+│   │   └── bindings.rs     # Bindings para Python	ok
+│   └── build.rs            # Script de build		ok
+└── scripts/
+    └── setup.py            # Script de instalación	ok

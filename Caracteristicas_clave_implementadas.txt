@@ -1,0 +1,23 @@
+Características Clave Implementadas
+Gestión de Capital Inteligente: 10% máximo por operación, 5 operaciones simultáneas
+
+Riesgo Cero Dinámico: entrada + fees + 0.2% ganancia
+
+Multi-Operación: Hasta 5 operaciones simultáneas
+
+Timeframes Múltiples: 1m, 5m, 15m, 1h configurables
+
+ML Integrado: LSTM con PyTorch para predicción de probabilidades
+
+Integración Orca.so: Swaps reales en blockchain
+
+Stop Loss/Take Profit: Con trailing stop dinámico
+
+Seguridad Avanzada: Variables encriptadas, logging de auditoría
+
+Telegram Integration: Comunicación bidireccional
+
+Monitoreo en Tiempo Real: Dashboard de performance
+
+Este bot está diseñado para ser robusto, seguro y escalable, con todas las características solicitadas implementadas de manera profesional.
+

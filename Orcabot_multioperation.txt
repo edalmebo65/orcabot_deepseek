@@ -1,0 +1,13 @@
+OrcaBot_MultiOperacion/
+├── config/ # Configuration management
+├── core/ # Core trading logic
+│ ├── blockchain/ # Blockchain integration
+│ ├── ml_engine/ # Machine learning
+│ ├── trading/ # Trading strategies
+│ └── scheduler/ # Task scheduling
+├── security/ # Security features
+├── communication/ # External communication
+├── utils/ # Utilities and helpers
+├── scripts/ # Setup and maintenance scripts
+└── tests/ # Test suite
+

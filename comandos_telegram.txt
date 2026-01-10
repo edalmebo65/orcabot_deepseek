@@ -1,0 +1,7 @@
+/status - Estado del bot y capital
+/operations - Operaciones activas
+/history - Historial de trades
+/pause - Pausar trading
+/resume - Reanudar trading
+/panic - Cerrar todas las posiciones
+/settings - Ver/Ajustar configuración

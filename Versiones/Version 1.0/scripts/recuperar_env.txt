@@ -1,0 +1,2 @@
+# Si pierdes el .env, usar emergency_recovery.json
+# Copiar los valores al nuevo .env

@@ -1,0 +1,90 @@
+# requirements_py312.txt
+# ============================================
+# CORE BLOCKCHAIN & SOLANA
+# ============================================
+solana>=0.32.0
+solders>=0.20.0
+anchorpy>=0.19.0
+web3>=6.15.0
+eth-account>=0.11.0
+eth-typing>=3.5.0
+eth-hash>=0.5.2
+
+# ============================================
+# ORCA & DEX
+# ============================================
+# orca-py desde GitHub (la versión más reciente)
+git+https://github.com/orca-so/orca-py.git@main
+raydium-py>=0.2.0  # Alternativa para Raydium
+jupiter-py>=0.2.0  # Para Jupiter aggregator
+
+# ============================================
+# ASYNC & NETWORKING
+# ============================================
+aiohttp>=3.9.0
+aiofiles>=23.2.0
+aiogram>=3.0.0  # ¡Importante! v3+ para Python 3.12
+httpx>=0.25.0
+websockets>=12.0
+
+# ============================================
+# SEGURIDAD & ENCRYPTACIÓN
+# ============================================
+cryptography>=42.0.0
+pyjwt>=2.8.0
+ecdsa>=0.18.0
+base58>=2.1.1
+
+# ============================================
+# DATA SCIENCE & ANÁLISIS
+# ============================================
+numpy>=1.26.0
+pandas>=2.1.0
+scikit-learn>=1.3.0
+matplotlib>=3.8.0
+seaborn>=0.13.0
+plotly>=5.18.0
+ta>=0.10.0  # Technical analysis
+ta-lib>=0.4.28  # Si está disponible para tu sistema
+
+# ============================================
+# EXCHANGES & TRADING
+# ============================================
+ccxt>=4.1.0
+ccxt-pro>=0.9.0  # Para websockets
+
+# ============================================
+# UTILIDADES & CONFIGURACIÓN
+# ============================================
+python-dotenv>=1.0.0
+pydantic>=2.5.0
+pydantic-settings>=2.1.0
+pyyaml>=6.0.1
+toml>=0.10.2
+colorama>=0.4.6
+loguru>=0.7.2
+rich>=13.7.0  # Mejor que colorama para output
+tqdm>=4.66.0
+watchdog>=3.0.0
+python-dateutil>=2.8.2
+typing-extensions>=4.8.0
+
+# ============================================
+# DATABASES & CACHE
+# ============================================
+redis>=5.0.0
+sqlalchemy>=2.0.0
+alembic>=1.12.0
+aiosqlite>=0.19.0  # Async SQLite
+motor>=3.3.0  # Async MongoDB
+
+# ============================================
+# TESTING & DEVELOPMENT
+# ============================================
+pytest>=7.4.0
+pytest-asyncio>=0.21.0
+pytest-cov>=4.1.0
+black>=23.0.0
+isort>=5.12.0
+mypy>=1.7.0
+ruff>=0.1.0

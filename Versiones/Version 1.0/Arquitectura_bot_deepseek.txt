@@ -1,0 +1,54 @@
+OrcaBot_MultiOperacion/
+├── .env.encrypted                    # Variables encriptadas
+├── config/
+│   ├── __init__.py
+│   ├── security_config.py           # Configuración de seguridad
+│   ├── trading_config.py            # Configuración de trading
+│   └── timeframes_config.py         # Configuración de marcos temporales
+├── core/
+│   ├── __init__.py
+│   ├── blockchain/
+│   │   ├── connection_manager.py    # Gestor de conexiones RPC
+│   │   ├── wallet_manager.py        # Gestor de wallet y saldos
+│   │   ├── orca_integration.py      # Integración con Orca.so
+│   │   ├── transaction_executor.py  # Ejecutor de transacciones
+│   │   └── whirlpool_scanner.py     # Escáner de pools
+│   ├── ml_engine/
+│   │   ├── lstm_predictor.py        # Modelo LSTM
+│   │   ├── feature_extractor.py     # Extracción de características
+│   │   ├── probability_calculator.py # Calculador de probabilidades
+│   │   └── training_pipeline.py     # Pipeline de entrenamiento
+│   ├── trading/
+│   │   ├── multi_operation_manager.py # Gestor multi-operación
+│   │   ├── position_tracker.py      # Rastreador de posiciones
+│   │   ├── risk_zero_calculator.py  # Cálculo de riesgo cero
+│   │   ├── stop_loss_manager.py     # Gestor de stop loss dinámico
+│   │   └── signal_generator.py      # Generador de señales
+│   └── scheduler/
+│       ├── timeframe_manager.py     # Gestor de marcos temporales
+│       └── operation_scheduler.py   # Planificador de operaciones
+├── security/
+│   ├── env_encryptor.py             # Encriptador de variables
+│   ├── key_manager.py               # Gestor de claves
+│   ├── audit_logger.py              # Logger de auditoría
+│   └── anomaly_detector.py          # Detector de anomalías
+├── communication/
+│   ├── telegram_bridge.py           # Puente con Telegram
+│   ├── status_reporter.py           # Reporteador de estado
+│   └── alert_manager.py             # Gestor de alertas
+├── utils/
+│   ├── data_pipeline.py             # Pipeline de datos
+│   ├── performance_monitor.py       # Monitor de rendimiento
+│   ├── error_handler.py             # Manejador de errores
+│   └── backup_manager.py            # Gestor de backups
+├── logs/                            # Logs del sistema
+├── data/                            # Datos históricos
+│   ├── training/                    # Datos de entrenamiento
+│   ├── live/                        # Datos en tiempo real
+│   └── signals/                     # Señales generadas
+├── scripts/
+│   ├── setup_environment.py         # Configuración inicial
+│   ├── encrypt_env_vars.py          # Encriptación de variables
+│   └── test_blockchain.py           # Pruebas de blockchain
+├── main.py                          # Punto de entrada principal
+└── requirements.txt                 # Dependencias

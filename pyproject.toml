@@ -1,0 +1,85 @@
+[project]
+name = "orcabot-deepseek"
+version = "1.0.0"
+description = "Trading bot multi-operación para Solana"
+authors = [
+    {name = "Tu Nombre", email = "tu@email.com"}
+]
+dependencies = [
+    "solana>=0.32.0",
+    "solders>=0.20.0",
+    "anchorpy>=0.19.0",
+    "web3>=6.15.0",
+    "aiogram>=3.0.0",
+    "aiohttp>=3.9.0",
+    "cryptography>=42.0.0",
+    "python-dotenv>=1.0.0",
+    "pydantic>=2.5.0",
+    "numpy>=1.26.0",
+    "pandas>=2.1.0",
+    "ccxt>=4.1.0",
+    "rich>=13.7.0",
+    "loguru>=0.7.2",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-asyncio>=0.21.0",
+    "black>=23.0.0",
+    "ruff>=0.1.0",
+    "mypy>=1.7.0",
+]
+analysis = [
+    "ta>=0.10.0",
+    "scikit-learn>=1.3.0",
+    "matplotlib>=3.8.0",
+]
+database = [
+    "sqlalchemy>=2.0.0",
+    "aiosqlite>=0.19.0",
+    "redis>=5.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/tuusuario/orcabot"
+Repository = "https://github.com/tuusuario/orcabot.git"
+
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["src"]
+
+[tool.black]
+line-length = 88
+target-version = ['py312']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  | \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | venv
+  | _build
+  | buck-out
+  | build
+  | dist
+)/
+'''
+
+[tool.ruff]
+target-version = "py312"
+line-length = 88
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    "I",  # isort
+    "B",  # flake8-bugbear
+]
+ignore = ["E501", "B008"]

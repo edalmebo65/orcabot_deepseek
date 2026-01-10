@@ -1,0 +1,11 @@
+/start - Initialize bot and show welcome message
+/status - Show current bot status and balances
+/operations - List active trading operations
+/history - Show trading history
+/portfolio - Display current portfolio
+/pools - Show top analyzed pools
+/pause - Pause trading temporarily
+/resume - Resume trading
+/panic - Emergency sell all positions
+/settings - View and adjust configuration
+/help - Show command list
