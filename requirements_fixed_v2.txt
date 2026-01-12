@@ -1,0 +1,53 @@
+# Core dependencies - sin conflictos
+numpy>=1.24.0
+pandas>=2.0.0
+schedule>=1.2.0
+requests>=2.31.0
+
+# Cryptography and security - compatibles
+cryptography>=41.0.0
+python-dotenv>=1.0.0
+
+# Async and networking
+aiohttp>=3.9.0
+websockets>=12.0
+
+# Data processing y ML ligero
+scipy>=1.11.0
+scikit-learn>=1.3.0
+# ta-lib>=0.4.26  # Comentado si causa problemas
+
+# Blockchain - versiones compatibles
+solana>=0.29.0
+solders>=0.18.0
+base58>=2.1.0
+
+# Logging y utilidades
+structlog>=23.1.0
+click>=8.1.0
+rich>=13.5.0
+tabulate>=0.9.0
+
+# Database ligero
+tinydb>=4.8.0
+
+# Date handling
+python-dateutil>=2.8.2
+pytz>=2023.3
+
+# Desarrollo y testing
+pytest>=7.4.0
+pytest-asyncio>=0.21.0
+
+# Opcional: ML más avanzado (descomentar si se necesita)
+# tensorflow>=2.13.0
+# keras>=2.13.0
+# xgboost>=1.7.0
+
+# Opcional: Análisis técnico (descomentar si se necesita)
+# pandas-ta>=0.3.14b0
+
+# Nota: Eliminadas dependencias conflictivas
+# - dataset (conflicto con sqlalchemy)
+# - sqlalchemy (requerido por dataset)
+# Usamos tinydb en su lugar para almacenamiento simple

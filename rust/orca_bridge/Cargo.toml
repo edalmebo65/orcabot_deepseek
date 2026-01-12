@@ -1,0 +1,35 @@
+[package]
+name = "orca_bridge"
+version = "0.1.0"
+edition = "2021"
+description = "Bridge Rust para OrcaBot - Integración con Orca.so"
+authors = ["OrcaBot Team"]
+license = "MIT"
+repository = "https://github.com/edalmebo65/orcabot_deepseek"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+reqwest = { version = "0.11", features = ["json"] }
+tokio = { version = "1.0", features = ["full"] }
+solana-client = "1.17.0"
+solana-sdk = "1.17.0"
+solana-program = "1.17.0"
+spl-token = { version = "4.0.0", features = ["no-entrypoint"] }
+anchor-lang = "0.29.0"
+anchor-spl = "0.29.0"
+orca-so = { git = "https://github.com/orca-so/typescript-sdk", package = "orca-rs", branch = "main" }
+jupiter-api = { git = "https://github.com/jup-ag/jupiter-api-rs", branch = "main" }
+thiserror = "1.0"
+log = "0.4"
+env_logger = "0.10"
+chrono = "0.4"
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+
+[workspace]

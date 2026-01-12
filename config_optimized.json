@@ -1,0 +1,119 @@
+{
+  "project": {
+    "name": "OrcaBot Optimized v3.5",
+    "version": "3.5.0",
+    "description": "Bot de trading con maximización avanzada de ganancias"
+  },
+  "trading_mode": "paper",
+  "rust_binary_path": "./target/release/orca_bridge",
+  "optimization": {
+    "target_annual_return": 0.80,
+    "max_daily_drawdown": 0.02,
+    "min_win_rate": 0.60,
+    "min_sharpe_ratio": 1.5,
+    "min_profit_factor": 1.8,
+    "compound_frequency": "daily",
+    "rebalance_frequency": "weekly"
+  },
+  "profit_strategies": {
+    "primary_strategy": "partial_trailing",
+    "secondary_strategies": ["scalping", "swing", "arbitrage"],
+    "partial_take_profits": [
+      {"target_percent": 3, "close_percent": 50},
+      {"target_percent": 5, "close_percent": 25},
+      {"target_percent": 8, "close_percent": 25}
+    ],
+    "trailing_stop": {
+      "activation_percent": 2.0,
+      "distance_percent": 0.5,
+      "dynamic_based_on_atr": true
+    }
+  },
+  "position_sizing": {
+    "base_percentage": 10,
+    "max_percentage": 15,
+    "kelly_fraction": 0.5,
+    "confidence_multipliers": {
+      "0.6": 0.5,
+      "0.7": 0.8,
+      "0.8": 1.0,
+      "0.9": 1.3,
+      "0.95": 1.5
+    },
+    "volatility_adjustment": true,
+    "market_condition_adjustment": true
+  },
+  "ml_training": {
+    "model_types": ["lstm", "xgboost", "ensemble"],
+    "sequence_length": 60,
+    "feature_engineering": {
+      "technical_indicators": true,
+      "onchain_metrics": true,
+      "sentiment_analysis": true,
+      "market_correlation": true
+    },
+    "optimization": {
+      "bayesian_optimization": true,
+      "n_trials": 50,
+      "reinforcement_learning": true
+    }
+  },
+  "arbitrage": {
+    "enabled": true,
+    "min_spread_percent": 0.3,
+    "max_slippage_percent": 0.5,
+    "timeout_seconds": 30,
+    "whitelisted_dexes": ["orca", "raydium", "jupiter", "serum"]
+  },
+  "compounding": {
+    "enabled": true,
+    "threshold_percent": 2.0,
+    "reinvest_percent": 50,
+    "schedule": "daily",
+    "minimum_profit_usd": 100
+  },
+  "risk_management": {
+    "daily_loss_limit_percent": 2.0,
+    "weekly_loss_limit_percent": 5.0,
+    "position_stop_loss": 2.0,
+    "portfolio_stop_loss": 10.0,
+    "max_concurrent_trades": 5,
+    "cooloff_after_losses": 3,
+    "volatility_adjusted_stops": true
+  },
+  "market_analysis": {
+    "update_frequency_minutes": 5,
+    "analyze_volume_spikes": true,
+    "detect_whale_activity": true,
+    "monitor_social_sentiment": true,
+    "track_market_correlation": true
+  },
+  "performance_monitoring": {
+    "real_time_metrics": true,
+    "hourly_reports": true,
+    "daily_summaries": true,
+    "weekly_analytics": true,
+    "auto_optimization": true,
+    "alert_thresholds": {
+      "low_win_rate": 50,
+      "low_sharpe_ratio": 1.0,
+      "high_drawdown": 5.0
+    }
+  },
+  "directories": {
+    "models": "./models/advanced",
+    "logs": "./logs/optimized",
+    "data": "./data/optimized",
+    "backup": "./backup/optimized",
+    "reports": "./reports"
+  },
+  "telegram": {
+    "enabled": true,
+    "alerts": {
+      "trades": true,
+      "performance": true,
+      "errors": true,
+      "optimizations": true
+    }
+  }
+}

@@ -1,19 +1,143 @@
 {
-  "name": "Orca Trading Bot",
-  "version": "1.0.0",
-  "rpc_url": "https://api.mainnet-beta.solana.com",
-  "wallet_address": "",
-  "trading_enabled": false,
-  "test_mode": true,
-  "max_slippage_bps": 50,
-  "min_profit_threshold": 0.001,
-  "monitored_pairs": [
-    {"symbol": "SOL-USDC", "enabled": true},
-    {"symbol": "SOL-USDT", "enabled": true},
-    {"symbol": "ORCA-USDC", "enabled": true}
+  "project": {
+    "name": "OrcaBot DeepSeek",
+    "version": "2.0.0",
+    "description": "Bot de trading algorítmico para Solana con integración Rust"
+  },
+  "trading_mode": "paper",
+  "rust_binary_path": "./target/release/orca_bridge",
+  "solana": {
+    "rpc_endpoint": "https://api.mainnet-beta.solana.com",
+    "ws_endpoint": "wss://api.mainnet-beta.solana.com",
+    "network": "mainnet-beta",
+    "commitment": "confirmed",
+    "priority_fee_multiplier": 1.5,
+    "timeout_seconds": 30
+  },
+  "orca": {
+    "api_url": "https://api.orca.so",
+    "version": "v1",
+    "whirlpools_program_id": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+    "use_jupiter_fallback": true
+  },
+  "jupiter": {
+    "api_url": "https://quote-api.jup.ag",
+    "version": "v6",
+    "platform_fee_bps": 0
+  },
+  "wallet": {
+    "public_key": "",
+    "private_key_encrypted": "",
+    "key_derivation_iterations": 1000000,
+    "auto_airdrop_test_sol": true,
+    "minimum_sol_balance": 0.05
+  },
+  "trading_pairs": [
+    {
+      "base": "SOL",
+      "quote": "USDC",
+      "min_amount": 0.1,
+      "max_amount": 10.0,
+      "enabled": true,
+      "priority": 1
+    },
+    {
+      "base": "WSOL",
+      "quote": "USDC",
+      "min_amount": 0.1,
+      "max_amount": 5.0,
+      "enabled": true,
+      "priority": 2
+    },
+    {
+      "base": "RAY",
+      "quote": "USDC",
+      "min_amount": 1.0,
+      "max_amount": 100.0,
+      "enabled": false,
+      "priority": 3
+    }
   ],
-  "check_interval_seconds": 30,
-  "log_level": "INFO",
-  "emergency_stop_threshold": 0.05,
-  "max_position_size": 0.1
+  "trading": {
+    "max_concurrent_trades": 5,
+    "slippage": 0.5,
+    "min_profit_percentage": 0.2,
+    "cooldown_between_trades_seconds": 10,
+    "price_update_interval_seconds": 5,
+    "position_monitor_interval_seconds": 2,
+    "enable_trailing_stop": true,
+    "trailing_stop_activation_percent": 1.0,
+    "trailing_stop_distance_percent": 0.5
+  },
+  "risk_parameters": {
+    "max_capital_per_trade": 0.1,
+    "max_open_trades": 5,
+    "stop_loss_percent": 2.0,
+    "take_profit_percent": 5.0,
+    "daily_loss_limit_percent": 5.0,
+    "max_drawdown_percent": 15.0,
+    "risk_zero_calculation": true,
+    "risk_zero_buffer_percent": 0.3
+  },
+  "ml": {
+    "model_path": "models/lstm_model.h5",
+    "prediction_interval_minutes": 5,
+    "confidence_threshold": 0.65,
+    "retrain_interval_hours": 24,
+    "feature_engineering": true,
+    "technical_indicators": [
+      "RSI",
+      "MACD",
+      "BollingerBands",
+      "VolumeProfile",
+      "ATR"
+    ],
+    "timeframes": ["1m", "5m", "15m", "1h"]
+  },
+  "logging": {
+    "level": "INFO",
+    "file": "orca_bot.log",
+    "max_file_size_mb": 10,
+    "backup_count": 5,
+    "log_format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  },
+  "telegram": {
+    "token": "",
+    "chat_id": "",
+    "enable_notifications": true,
+    "notification_level": "important",
+    "commands_enabled": true,
+    "allowed_users": []
+  },
+  "monitoring": {
+    "health_check_interval_minutes": 30,
+    "daily_report_time": "08:00",
+    "performance_metrics": true,
+    "enable_alerting": true,
+    "alert_channels": ["telegram"]
+  },
+  "security": {
+    "encrypt_sensitive_data": true,
+    "audit_logging": true,
+    "rate_limiting": true,
+    "max_requests_per_minute": 60,
+    "anomaly_detection": true,
+    "auto_lock_inactivity_minutes": 30
+  },
+  "backup": {
+    "auto_backup": true,
+    "backup_interval_hours": 6,
+    "max_backup_files": 10,
+    "backup_path": "./backups"
+  },
+  "advanced": {
+    "use_priority_fees": true,
+    "skip_preflight": false,
+    "max_retries": 3,
+    "retry_delay_seconds": 2,
+    "enable_web_dashboard": false,
+    "dashboard_port": 8080,
+    "webhook_url": "",
+    "custom_strategies": []
+  }
 }
