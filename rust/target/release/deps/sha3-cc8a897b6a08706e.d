@@ -1,0 +1,11 @@
+C:\Users\edalm\Documents\TradingAlgoritmico\Orcabot_deepseek\rust\target\release\deps\sha3-cc8a897b6a08706e.d: C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\sha3-0.9.1\src\lib.rs C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\sha3-0.9.1\src\paddings.rs C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\sha3-0.9.1\src\macros.rs C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\sha3-0.9.1\src\reader.rs C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\sha3-0.9.1\src\state.rs
+
+C:\Users\edalm\Documents\TradingAlgoritmico\Orcabot_deepseek\rust\target\release\deps\libsha3-cc8a897b6a08706e.rlib: C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\sha3-0.9.1\src\lib.rs C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\sha3-0.9.1\src\paddings.rs C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\sha3-0.9.1\src\macros.rs C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\sha3-0.9.1\src\reader.rs C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\sha3-0.9.1\src\state.rs
+
+C:\Users\edalm\Documents\TradingAlgoritmico\Orcabot_deepseek\rust\target\release\deps\libsha3-cc8a897b6a08706e.rmeta: C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\sha3-0.9.1\src\lib.rs C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\sha3-0.9.1\src\paddings.rs C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\sha3-0.9.1\src\macros.rs C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\sha3-0.9.1\src\reader.rs C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\sha3-0.9.1\src\state.rs
+
+C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\sha3-0.9.1\src\lib.rs:
+C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\sha3-0.9.1\src\paddings.rs:
+C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\sha3-0.9.1\src\macros.rs:
+C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\sha3-0.9.1\src\reader.rs:
+C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\sha3-0.9.1\src\state.rs:

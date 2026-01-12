@@ -1,0 +1,13 @@
+main.run() → Bucle cada 30s
+      ↓
+orca_api.get_all_pools() → Obtener pools actuales
+      ↓
+rust_bridge.get_swap_quote() → Precios en tiempo real
+      ↓
+trading.strategy.analyze() → Analizar oportunidades
+      ↓
+Si oportunidad → risk_manager.validate()
+      ↓
+Si válido → transactions.execute()
+      ↓
+Registrar en database.log_trade()

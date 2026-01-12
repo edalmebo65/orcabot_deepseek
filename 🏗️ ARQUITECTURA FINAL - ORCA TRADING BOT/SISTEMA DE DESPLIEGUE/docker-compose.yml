@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  orca-bot:
+    build: .
+    environment:
+      - RPC_URL=${RPC_URL}
+      - PRIVATE_KEY=${PRIVATE_KEY_ENCRYPTED}
+      - TRADING_ENABLED=${TRADING_ENABLED:-false}
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "scripts/health_check.py"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+  
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+  
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_DB=orcabot
+      - POSTGRES_USER=orca
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+  
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+
+volumes:
+  redis_data:
+  postgres_data:
+  grafana_data:

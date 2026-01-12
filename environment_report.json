@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-01-09T15:06:32.408548",
+  "timestamp": "2026-01-12T12:37:28.667422",
   "environment": "orcabot_deepseek",
   "checks": {
     "conda_env": {
@@ -28,8 +28,8 @@
         "version": "6.11.1"
       },
       "aiohttp": {
-        "status": "WARNING",
-        "version": "3.8.6"
+        "status": "PASS",
+        "version": "3.9.1"
       },
       "aiogram": {
         "status": "PASS",
@@ -44,8 +44,8 @@
         "version": "2.2.6"
       },
       "pandas": {
-        "status": "PASS",
-        "version": "2.3.3"
+        "status": "ERROR",
+        "error": "numpy.dtype size changed, may indicate binary incompatibility. Expected 96 from C header, got 88 from PyObject"
       }
     },
     "orca": {

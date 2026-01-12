@@ -1,0 +1,1 @@
+C:\Users\edalm\Documents\TradingAlgoritmico\Orcabot_deepseek\rust\target\release\orca_rust_bridge.dll: C:\Users\edalm\Documents\TradingAlgoritmico\Orcabot_deepseek\rust\build.rs C:\Users\edalm\Documents\TradingAlgoritmico\Orcabot_deepseek\rust\src\lib.rs

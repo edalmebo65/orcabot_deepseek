@@ -1,0 +1,19 @@
+{
+  "name": "Orca Trading Bot",
+  "version": "1.0.0",
+  "rpc_url": "https://api.mainnet-beta.solana.com",
+  "wallet_address": "",
+  "trading_enabled": false,
+  "test_mode": true,
+  "max_slippage_bps": 50,
+  "min_profit_threshold": 0.001,
+  "monitored_pairs": [
+    {"symbol": "SOL-USDC", "enabled": true},
+    {"symbol": "SOL-USDT", "enabled": true},
+    {"symbol": "ORCA-USDC", "enabled": true}
+  ],
+  "check_interval_seconds": 30,
+  "log_level": "INFO",
+  "emergency_stop_threshold": 0.05,
+  "max_position_size": 0.1
+}

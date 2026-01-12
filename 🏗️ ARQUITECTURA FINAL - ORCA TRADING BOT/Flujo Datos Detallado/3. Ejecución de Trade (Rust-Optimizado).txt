@@ -1,0 +1,13 @@
+Python: trading.Strategy.generate_signal()
+      ↓
+Rust: orca_client.calculate_optimal_swap()
+      ↓
+Python: wallet.prepare_transaction()
+      ↓
+Rust: solana_client.build_and_sign_tx()
+      ↓
+Enviar a Solana Network
+      ↓
+Python: monitor.confirmation.wait()
+      ↓
+Registrar resultado en DB + logs

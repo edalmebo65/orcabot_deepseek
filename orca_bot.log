@@ -1,0 +1,3 @@
+2026-01-10 20:52:12,499 - __main__ - ERROR - No se pudo cargar bridge: No module named 'rust_bridge_fixed'
+2026-01-10 21:11:48,775 - __main__ - ERROR - No se pudo cargar bridge: No module named 'rust_bridge_fixed'
+2026-01-10 21:16:55,808 - __main__ - ERROR - No se pudo cargar bridge: No module named 'rust_bridge_fixed'

@@ -1,0 +1,11 @@
+C:\Users\edalm\Documents\TradingAlgoritmico\Orcabot_deepseek\rust\target\release\deps\ascii-9122fe9cd578248a.d: C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ascii-0.9.3\src\lib.rs C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ascii-0.9.3\src\ascii_char.rs C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ascii-0.9.3\src\ascii_str.rs C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ascii-0.9.3\src\ascii_string.rs C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ascii-0.9.3\src\free_functions.rs
+
+C:\Users\edalm\Documents\TradingAlgoritmico\Orcabot_deepseek\rust\target\release\deps\libascii-9122fe9cd578248a.rlib: C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ascii-0.9.3\src\lib.rs C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ascii-0.9.3\src\ascii_char.rs C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ascii-0.9.3\src\ascii_str.rs C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ascii-0.9.3\src\ascii_string.rs C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ascii-0.9.3\src\free_functions.rs
+
+C:\Users\edalm\Documents\TradingAlgoritmico\Orcabot_deepseek\rust\target\release\deps\libascii-9122fe9cd578248a.rmeta: C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ascii-0.9.3\src\lib.rs C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ascii-0.9.3\src\ascii_char.rs C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ascii-0.9.3\src\ascii_str.rs C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ascii-0.9.3\src\ascii_string.rs C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ascii-0.9.3\src\free_functions.rs
+
+C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ascii-0.9.3\src\lib.rs:
+C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ascii-0.9.3\src\ascii_char.rs:
+C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ascii-0.9.3\src\ascii_str.rs:
+C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ascii-0.9.3\src\ascii_string.rs:
+C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ascii-0.9.3\src\free_functions.rs:

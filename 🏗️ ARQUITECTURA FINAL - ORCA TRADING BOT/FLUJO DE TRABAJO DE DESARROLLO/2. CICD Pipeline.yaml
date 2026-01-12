@@ -1,0 +1,19 @@
+# .github/workflows/ci.yml
+name: CI Pipeline
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Python
+        uses: actions/setup-python@v4
+      - name: Setup Rust
+        uses: actions-rs/toolchain@v1
+      - name: Run Tests
+        run: |
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
+          python scripts/build_rust.py
+          pytest tests/ -v --cov=python

@@ -1,0 +1,9 @@
+Usuario → main.py → config.yaml → OrcaBot.initialize()
+      ↓
+Cargar .env (claves privadas)
+      ↓
+Inicializar Rust Bridge (orca_rust_bridge.dll)
+      ↓
+Conectar a Solana RPC + Orca API
+      ↓
+Verificar balances y permisos

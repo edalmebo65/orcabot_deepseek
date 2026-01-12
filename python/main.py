@@ -1,32 +1,50 @@
 #!/usr/bin/env python3
 """
-Orca Trading Bot - Python + Rust
+Orca Trading Bot - Integración completa con Bridge Rust
 """
 import asyncio
 import json
-from datetime import datetime
+import sys
+import os
 from pathlib import Path
-from typing import Dict, Any, Optional
+from typing import Dict, List, Optional
+from datetime import datetime
+import logging
 
-from rust_bridge import get_orca_bridge
-from solana.rpc.async_api import AsyncClient
+# Añadir directorio actual al path
+sys.path.insert(0, str(Path(__file__).parent))
+
+from rust_bridge import orca_bridge
 from solders.pubkey import Pubkey
+from solana.rpc.async_api import AsyncClient
+from solana.rpc.commitment import Confirmed
+
+# Configurar logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler('orca_bot.log'),
+        logging.StreamHandler()
+    ]
+)
+logger = logging.getLogger(__name__)
 
 class OrcaTradingBot:
-    def __init__(self, config_path: str = "config/config.json"):
-        self.config = self.load_config(config_path)
-        self.rust_bridge = get_orca_bridge()
-        
-        # Inicializar cliente Solana
-        self.solana_client = AsyncClient(self.config["rpc_url"])
-        
-        print(f"🔧 Modo: {self.rust_bridge.mode}")
-        print(f"🌐 RPC: {self.config['rpc_url']}")
-        print(f"🔄 Program ID: {self.rust_bridge.whirlpool_program_id}")
+    """Bot principal usando Bridge Rust"""
     
-    def load_config(self, config_path: str) -> Dict[str, Any]:
+    def __init__(self, config_path: str = "config.json"):
+        self.config = self.load_config(config_path)
+        self.solana_client = None
+        self.running = False
+        
+        logger.info(f"Bot inicializado en modo: {orca_bridge.mode}")
+        logger.info(f"Program ID: {orca_bridge.whirlpool_program_id}")
+    
+    def load_config(self, config_path: str) -> Dict:
         """Cargar configuración"""
         config_file = Path(config_path)
+        
         if config_file.exists():
             with open(config_file, 'r') as f:
                 return json.load(f)
@@ -35,134 +53,277 @@ class OrcaTradingBot:
         default_config = {
             "rpc_url": "https://api.mainnet-beta.solana.com",
             "wallet_address": "",
-            "trading_pairs": [
-                {"base": "SOL", "quote": "USDC"},
-                {"base": "ORCA", "quote": "USDC"},
+            "private_key": "",  # Usar .env para esto
+            "trading_enabled": False,
+            "test_mode": True,
+            "max_slippage_bps": 50,
+            "monitored_pairs": [
+                {"name": "SOL-USDC", "base": "SOL", "quote": "USDC"},
+                {"name": "SOL-USDT", "base": "SOL", "quote": "USDT"},
+                {"name": "ORCA-USDC", "base": "ORCA", "quote": "USDC"},
             ],
-            "slippage_bps": 50,
-            "min_profit_bps": 10,
+            "check_interval": 30,
+            "min_profit_threshold": 0.001,  # 0.1%
         }
         
-        # Guardar configuración por defecto
         config_file.parent.mkdir(exist_ok=True)
         with open(config_file, 'w') as f:
             json.dump(default_config, f, indent=2)
         
-        print(f"📄 Configuración creada en: {config_path}")
         return default_config
     
-    async def get_wallet_balance(self) -> Optional[float]:
-        """Obtener balance de SOL"""
-        if not self.config["wallet_address"]:
-            print("⚠️  No hay dirección de wallet configurada")
-            return None
+    async def initialize(self):
+        """Inicializar conexiones"""
+        logger.info("Inicializando bot...")
         
         try:
-            # Usar el puente Rust
-            balance_lamports = self.rust_bridge.get_balance(self.config["wallet_address"])
-            if balance_lamports:
-                return balance_lamports / 1_000_000_000  # Convertir a SOL
+            # Inicializar cliente Solana
+            self.solana_client = AsyncClient(
+                self.config["rpc_url"],
+                commitment=Confirmed
+            )
+            
+            # Verificar conexión
+            version = await self.solana_client.get_version()
+            logger.info(f"✅ Solana RPC conectado: {version}")
+            
+            # Cargar wallet si existe
+            await self.load_wallet()
+            
+            return True
+            
         except Exception as e:
-            print(f"❌ Error obteniendo balance: {e}")
-        
-        return None
+            logger.error(f"❌ Error inicializando: {e}")
+            return False
     
-    async def analyze_market(self, base_mint: str, quote_mint: str):
-        """Analizar mercado para un par"""
-        print(f"\n📊 Analizando {base_mint}/{quote_mint}...")
+    async def load_wallet(self):
+        """Cargar wallet desde .env"""
+        from dotenv import load_dotenv
+        load_dotenv()
         
-        # Encontrar pools disponibles
-        pools = self.rust_bridge.find_whirlpools(base_mint, quote_mint)
-        if pools:
-            print(f"   🔍 Encontrados {len(pools)} pools:")
-            for pool in pools:
-                print(f"     • {pool['address'][:8]}... - Fee: {pool['fee_rate']/10000}%")
+        private_key = os.getenv("PRIVATE_KEY")
+        if private_key:
+            # Configurar wallet
+            from solders.keypair import Keypair
+            import base58
+            
+            try:
+                keypair_bytes = base58.b58decode(private_key)
+                self.wallet = Keypair.from_bytes(keypair_bytes)
+                logger.info(f"✅ Wallet cargada: {self.wallet.pubkey()}")
+            except Exception as e:
+                logger.error(f"Error cargando wallet: {e}")
+                self.wallet = None
+        else:
+            logger.warning("⚠️  No hay PRIVATE_KEY en .env - Modo solo lectura")
+            self.wallet = None
+    
+    async def get_market_data(self):
+        """Obtener datos de mercado usando el bridge Rust"""
+        logger.info("Obteniendo datos de mercado...")
         
-        # Obtener cotización de ejemplo
-        quote = self.rust_bridge.get_swap_quote(
-            input_mint=base_mint,
-            output_mint=quote_mint,
-            amount=1_000_000_000,  # 1 SOL en lamports
-            slippage_bps=self.config["slippage_bps"]
-        )
-        
-        if quote:
-            print(f"   💰 Cotización:")
-            print(f"     • Amount out: {quote['estimated_amount_out']}")
-            print(f"     • Fee: {quote['estimated_fee']}")
-            print(f"     • Price impact: {quote['price_impact']:.2%}")
-        
-        return pools
+        try:
+            # Obtener pools de Orca
+            pools = orca_bridge.get_all_pools()
+            logger.info(f"📊 {len(pools)} pools disponibles")
+            
+            # Obtener whirlpools
+            whirlpools = orca_bridge.get_whirlpools()
+            logger.info(f"🌀 {len(whirlpools)} whirlpools disponibles")
+            
+            # Mostrar algunos pools importantes
+            important_pools = ["SOL-USDC", "SOL-USDT", "ORCA-USDC"]
+            for pool in pools[:5]:  # Mostrar primeros 5
+                # Determinar símbolos
+                token_a = pool.get("token_a", "")
+                token_b = pool.get("token_b", "")
+                
+                # Identificar símbolos conocidos
+                symbols = []
+                for mint, sym in [
+                    (orca_bridge.sol_mint, "SOL"),
+                    (orca_bridge.usdc_mint, "USDC"),
+                    (orca_bridge.usdt_mint, "USDT"),
+                    (orca_bridge.orca_mint, "ORCA")
+                ]:
+                    if token_a == mint:
+                        symbols.append(sym)
+                    if token_b == mint:
+                        symbols.append(sym)
+                
+                if len(symbols) == 2:
+                    pair_name = f"{symbols[0]}-{symbols[1]}"
+                    fee = pool.get("fee", 0)
+                    logger.info(f"   {pair_name}: Fee={fee*100:.2f}%")
+            
+            return pools, whirlpools
+            
+        except Exception as e:
+            logger.error(f"Error obteniendo datos de mercado: {e}")
+            return [], []
     
     async def monitor_prices(self):
         """Monitorizar precios en tiempo real"""
-        print("\n👀 Monitorizando precios...")
+        logger.info("Iniciando monitorización de precios...")
         
-        for pair in self.config["trading_pairs"]:
-            base = pair["base"]
-            quote = pair["quote"]
-            
-            # Obtener cotizaciones periódicamente
-            quote_data = self.rust_bridge.get_swap_quote(
-                input_mint=self.get_mint_address(base),
-                output_mint=self.get_mint_address(quote),
-                amount=1_000_000_000,
-                slippage_bps=self.config["slippage_bps"]
-            )
-            
-            if quote_data:
-                price = quote_data["estimated_amount_out"] / 1_000_000_000
-                print(f"   {base}/{quote}: {price:.4f}")
+        while self.running:
+            try:
+                timestamp = datetime.now().strftime("%H:%M:%S")
+                
+                # Para cada par monitoreado
+                for pair in self.config["monitored_pairs"]:
+                    base = pair["base"]
+                    quote = pair["quote"]
+                    
+                    # Obtener mints
+                    base_mint = getattr(orca_bridge, f"{base.lower()}_mint", "")
+                    quote_mint = getattr(orca_bridge, f"{quote.lower()}_mint", "")
+                    
+                    if base_mint and quote_mint:
+                        # Obtener cotización
+                        quote_data = orca_bridge.get_swap_quote(
+                            input_mint=base_mint,
+                            output_mint=quote_mint,
+                            amount=1000000000,  # 1 SOL o equivalente
+                            slippage=0.5
+                        )
+                        
+                        if quote_data:
+                            in_amount = quote_data.get("in_amount", 0)
+                            out_amount = quote_data.get("out_amount", 0)
+                            
+                            if in_amount > 0:
+                                price = out_amount / in_amount
+                                pair_name = f"{base}/{quote}"
+                                logger.info(f"[{timestamp}] {pair_name}: {price:.4f}")
+                
+                # Esperar antes de la próxima verificación
+                await asyncio.sleep(self.config["check_interval"])
+                
+            except KeyboardInterrupt:
+                logger.info("Monitorización interrumpida por usuario")
+                break
+            except Exception as e:
+                logger.error(f"Error en monitorización: {e}")
+                await asyncio.sleep(10)
     
-    def get_mint_address(self, symbol: str) -> str:
-        """Obtener dirección mint desde símbolo"""
-        mint_map = {
-            "SOL": "So11111111111111111111111111111111111111112",
-            "USDC": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
-            "USDT": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
-            "ORCA": "orcaEKTdK7LKz57vaAYr9QeNsVEPfiu6QeMU1kektZE",
-        }
-        return mint_map.get(symbol, symbol)  # Si no está en el mapa, asumir que ya es una dirección
+    async def check_arbitrage_opportunities(self):
+        """Buscar oportunidades de arbitraje"""
+        logger.info("Buscando oportunidades de arbitraje...")
+        
+        try:
+            # Obtener todos los pools
+            pools = orca_bridge.get_all_pools()
+            
+            # Para simplificar, buscar entre SOL-USDC y SOL-USDT
+            sol_usdc_pool = None
+            sol_usdt_pool = None
+            
+            for pool in pools:
+                token_a = pool.get("token_a", "")
+                token_b = pool.get("token_b", "")
+                
+                if token_a == orca_bridge.sol_mint and token_b == orca_bridge.usdc_mint:
+                    sol_usdc_pool = pool
+                elif token_a == orca_bridge.sol_mint and token_b == orca_bridge.usdt_mint:
+                    sol_usdt_pool = pool
+            
+            if sol_usdc_pool and sol_usdt_pool:
+                # Obtener precios
+                quote_sol_usdc = orca_bridge.get_swap_quote(
+                    orca_bridge.sol_mint, orca_bridge.usdc_mint, 1000000000, 0.5
+                )
+                quote_sol_usdt = orca_bridge.get_swap_quote(
+                    orca_bridge.sol_mint, orca_bridge.usdt_mint, 1000000000, 0.5
+                )
+                
+                if quote_sol_usdc and quote_sol_usdt:
+                    price_sol_usdc = quote_sol_usdc.get("out_amount", 0) / 1000000000
+                    price_sol_usdt = quote_sol_usdt.get("out_amount", 0) / 1000000000
+                    
+                    # Calcular diferencia
+                    if price_sol_usdc > 0 and price_sol_usdt > 0:
+                        diff_pct = abs(price_sol_usdc - price_sol_usdt) / max(price_sol_usdc, price_sol_usdt)
+                        
+                        if diff_pct > 0.01:  # 1% de diferencia
+                            logger.info(f"⚡ Oportunidad de arbitraje detectada!")
+                            logger.info(f"   SOL/USDC: {price_sol_usdc:.2f}")
+                            logger.info(f"   SOL/USDT: {price_sol_usdt:.2f}")
+                            logger.info(f"   Diferencia: {diff_pct*100:.2f}%")
+            
+        except Exception as e:
+            logger.error(f"Error buscando arbitraje: {e}")
+    
+    async def run_strategies(self):
+        """Ejecutar estrategias de trading"""
+        if not self.config.get("trading_enabled", False):
+            logger.info("🚫 Trading deshabilitado en configuración")
+            return
+        
+        logger.info("Ejecutando estrategias...")
+        
+        # Ejemplo: Estrategia simple de market making
+        # En producción, implementarías estrategias más sofisticadas
+        
+        await self.check_arbitrage_opportunities()
     
     async def run(self):
         """Ejecutar bot principal"""
-        print("=" * 70)
-        print("🐋 ORCA TRADING BOT - Python + Rust")
-        print("=" * 70)
-        print(f"Hora: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+        logger.info("=" * 60)
+        logger.info("🚀 ORCA TRADING BOT - BRIDGE RUST")
+        logger.info("=" * 60)
         
-        # Verificar balance
-        balance = await self.get_wallet_balance()
-        if balance is not None:
-            print(f"💰 Balance: {balance:.4f} SOL")
+        # Inicializar
+        if not await self.initialize():
+            logger.error("No se pudo inicializar el bot")
+            return
         
-        # Analizar mercados configurados
-        for pair in self.config["trading_pairs"]:
-            await self.analyze_market(
-                self.get_mint_address(pair["base"]),
-                self.get_mint_address(pair["quote"])
-            )
+        # Obtener datos iniciales
+        await self.get_market_data()
         
-        # Ejemplo de monitoreo continuo
+        # Mostrar balance si hay wallet
+        if hasattr(self, 'wallet') and self.wallet:
+            balance = orca_bridge.get_balance(str(self.wallet.pubkey()))
+            if balance:
+                sol_balance = balance / 1_000_000_000
+                logger.info(f"💰 Balance inicial: {sol_balance:.4f} SOL")
+        
+        # Iniciar monitorización
+        self.running = True
+        
         try:
-            while True:
-                await self.monitor_prices()
-                await asyncio.sleep(10)  # Esperar 10 segundos
+            # Ejecutar en loop
+            while self.running:
+                # Ejecutar estrategias
+                await self.run_strategies()
+                
+                # Monitorizar precios (en paralelo)
+                monitor_task = asyncio.create_task(self.monitor_prices())
+                
+                # Esperar un ciclo
+                await asyncio.sleep(self.config["check_interval"] * 3)
+                
+                # Cancelar monitorización para reiniciar
+                monitor_task.cancel()
+                
         except KeyboardInterrupt:
-            print("\n\n👋 Bot detenido por usuario")
-        
-        # Cerrar conexiones
-        await self.solana_client.close()
+            logger.info("\n👋 Bot detenido por usuario")
+        except Exception as e:
+            logger.error(f"Error en ejecución principal: {e}")
+        finally:
+            self.running = False
+            if self.solana_client:
+                await self.solana_client.close()
+            logger.info("Bot finalizado")
 
 async def main():
-    """Punto de entrada principal"""
+    """Punto de entrada"""
+    bot = OrcaTradingBot()
+    
     try:
-        bot = OrcaTradingBot()
         await bot.run()
     except Exception as e:
-        print(f"❌ Error en el bot: {e}")
-        import traceback
-        traceback.print_exc()
+        logger.error(f"Error fatal: {e}")
         return 1
     
     return 0

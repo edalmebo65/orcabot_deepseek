@@ -1,0 +1,11 @@
+C:\Users\edalm\Documents\TradingAlgoritmico\Orcabot_deepseek\rust\target\release\deps\cipher-26fac034465f510e.d: C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\cipher-0.3.0\src\lib.rs C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\cipher-0.3.0\src\block.rs C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\cipher-0.3.0\src\common.rs C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\cipher-0.3.0\src\errors.rs C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\cipher-0.3.0\src\stream.rs
+
+C:\Users\edalm\Documents\TradingAlgoritmico\Orcabot_deepseek\rust\target\release\deps\libcipher-26fac034465f510e.rlib: C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\cipher-0.3.0\src\lib.rs C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\cipher-0.3.0\src\block.rs C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\cipher-0.3.0\src\common.rs C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\cipher-0.3.0\src\errors.rs C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\cipher-0.3.0\src\stream.rs
+
+C:\Users\edalm\Documents\TradingAlgoritmico\Orcabot_deepseek\rust\target\release\deps\libcipher-26fac034465f510e.rmeta: C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\cipher-0.3.0\src\lib.rs C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\cipher-0.3.0\src\block.rs C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\cipher-0.3.0\src\common.rs C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\cipher-0.3.0\src\errors.rs C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\cipher-0.3.0\src\stream.rs
+
+C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\cipher-0.3.0\src\lib.rs:
+C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\cipher-0.3.0\src\block.rs:
+C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\cipher-0.3.0\src\common.rs:
+C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\cipher-0.3.0\src\errors.rs:
+C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\cipher-0.3.0\src\stream.rs:

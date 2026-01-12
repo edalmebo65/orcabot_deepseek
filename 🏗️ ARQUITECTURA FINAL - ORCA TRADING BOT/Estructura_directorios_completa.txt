@@ -1,0 +1,103 @@
+orcabot_deepseek/
+├── 📁 config/                           # Configuración
+│   ├── config.yaml                     # Config principal
+│   ├── strategies.yaml                 # Estrategias
+│   ├── tokens.json                     # Tokens soportados
+│   └── wallets/                        # Configuración de wallets
+│       ├── mainnet.yaml
+│       └── devnet.yaml
+│
+├── 📁 rust/                            # Módulo Rust
+│   ├── Cargo.toml                      # Config Rust
+│   ├── Cargo.lock
+│   ├── 📁 src/
+│   │   ├── lib.rs                      # Entry point
+│   │   ├── orca_client.rs              # Cliente Orca
+│   │   ├── solana_client.rs            # Cliente Solana
+│   │   ├── transactions.rs             # Transacciones
+│   │   └── types.rs                    # Tipos de datos
+│   └── 📁 tests/
+│       └── integration_tests.rs
+│
+├── 📁 python/                          # Código Python
+│   ├── __init__.py
+│   ├── main.py                         # Punto de entrada
+│   ├── rust_bridge.py                  # Puente Python-Rust
+│   │
+│   ├── 📁 core/                        # Núcleo del sistema
+│   │   ├── __init__.py
+│   │   ├── bot.py                      # Clase Bot principal
+│   │   ├── wallet.py                   # Gestión de wallets
+│   │   ├── transactions.py             # Transacciones Python
+│   │   └── instructions.py             # Instrucciones Orca
+│   │
+│   ├── 📁 api/                         # APIs externas
+│   │   ├── __init__.py
+│   │   ├── orca_api.py                 # API Orca.so
+│   │   ├── jupiter_api.py              # API Jupiter
+│   │   ├── helius_api.py               # RPC Helius
+│   │   └── market_data.py              # Datos de mercado
+│   │
+│   ├── 📁 trading/                     # Lógica de trading
+│   │   ├── __init__.py
+│   │   ├── strategy.py                 # Estrategia base
+│   │   ├── arbitrage.py                # Arbitraje
+│   │   ├── market_maker.py             # Market Making
+│   │   ├── positions.py                # Gestión posiciones
+│   │   └── risk_manager.py             # Gestión de riesgo
+│   │
+│   ├── 📁 utils/                       # Utilidades
+│   │   ├── __init__.py
+│   │   ├── logger.py                   # Logging avanzado
+│   │   ├── helpers.py                  # Funciones helper
+│   │   ├── math_utils.py               # Matemáticas financieras
+│   │   ├── time_utils.py               # Utilidades tiempo
+│   │   └── safety.py                   # Seguridad
+│   │
+│   └── 📁 data/                        # Manejo de datos
+│       ├── __init__.py
+│       ├── database.py                 # Conexión DB
+│       ├── cache.py                    # Sistema de cache
+│       └── models.py                   # Modelos de datos
+│
+├── 📁 scripts/                         # Scripts de utilidad
+│   ├── setup.py                        # Instalación completa
+│   ├── build_rust.py                   # Construcción Rust
+│   ├── deploy.py                       # Despliegue
+│   ├── test_connection.py              # Prueba conexión
+│   ├── health_check.py                 # Monitoreo salud
+│   └── backup.py                       # Backup datos
+│
+├── 📁 data/                            # Datos persistentes
+│   ├── market_data.db                  # Base de datos SQLite
+│   ├── cache/                          # Cache Redis
+│   ├── logs/                           # Logs de operaciones
+│   │   ├── trading.log
+│   │   ├── errors.log
+│   │   └── performance.log
+│   └── backups/                        # Backups
+│
+├── 📁 tests/                           # Tests
+│   ├── __init__.py
+│   ├── test_bot.py                     # Tests del bot
+│   ├── test_trading.py                 # Tests trading
+│   ├── test_api.py                     # Tests API
+│   └── integration/                    # Tests integración
+│       ├── test_rust_bridge.py
+│       └── test_solana.py
+│
+├── .env                                # Variables entorno
+├── .env.example                        # Ejemplo .env
+├── requirements.txt                    # Dependencias Python
+├── requirements-dev.txt                # Dev dependencies
+├── pyproject.toml                      # Config Python moderna
+├── Dockerfile                          # Contenedorización
+├── docker-compose.yml                  # Orquestación
+├── README.md                           # Documentación
+├── LICENSE                             # Licencia
+└── .github/                            # CI/CD
+    ├── workflows/
+    │   ├── ci.yml                      # CI
+    │   ├── cd.yml                      # CD
+    │   └── security.yml                # Security scan
+    └── dependabot.yml                  # Updates automáticas

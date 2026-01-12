@@ -1,0 +1,70 @@
+┌─────────────────────────────────────────────────────────────┐
+│                    ORCA TRADING BOT                         │
+├─────────────────────────────────────────────────────────────┤
+│  CAPA DE PRESENTACIÓN (Python)                              │
+│  ┌─────────────────────────────────────────────────────┐    │
+│  │  main.py                                           │    │
+│  │  • Orchestrador principal                          │    │
+│  │  • CLI/Interfaz de usuario                         │    │
+│  │  • Gestión de ciclos de vida                       │    │
+│  └─────────────────────────────────────────────────────┘    │
+│                                                              │
+│  CAPA DE NEGOCIO (Python)                                   │
+│  ┌─────────────────────────────────────────────────────┐    │
+│  │  trading/                                          │    │
+│  │  ├── strategy.py    # Estrategias de trading       │    │
+│  │  ├── arbitrage.py   # Detección de arbitraje       │    │
+│  │  ├── market_maker.py# Market Making                │    │
+│  │  └── risk_manager.py# Gestión de riesgo            │    │
+│  └─────────────────────────────────────────────────────┘    │
+│                                                              │
+│  CAPA DE SERVICIOS (Python-Rust)                            │
+│  ┌─────────────────────────────────────────────────────┐    │
+│  │  rust_bridge.py     # Puente Python↔Rust           │◄───┤
+│  │  api/                                              │    │
+│  │  ├── orca_api.py    # API REST de Orca.so          │    │
+│  │  ├── jupiter_api.py # API de Jupiter (fallback)    │    │
+│  │  └── helius_api.py  # RPC mejorado                 │    │
+│  └─────────────────────────────────────────────────────┘    │
+│            ▲                                                 │
+│            │ FFI (Foreign Function Interface)                │
+│            ▼                                                 │
+│  ┌─────────────────────────────────────────────────────┐    │
+│  │  CAPA RUST (Alto Rendimiento)                      │    │
+│  │  ┌─────────────────────────────────────────────┐   │    │
+│  │  │  orca_rust_bridge.dll/.so                   │   │    │
+│  │  │  • Cliente Solana nativo                    │   │    │
+│  │  │  • Procesamiento de transacciones           │   │    │
+│  │  │  • Cálculos matemáticos críticos            │   │    │
+│  │  └─────────────────────────────────────────────┘   │    │
+│  └─────────────────────────────────────────────────────┘    │
+│            │                                                 │
+│            ▼                                                 │
+│  ┌─────────────────────────────────────────────────────┐    │
+│  │  BLOCKCHAIN SOLANA                                 │    │
+│  │  ├── Orca Whirlpools Program                       │    │
+│  │  ├── Orca Swap Program                             │    │
+│  │  └── Token Program (SPL)                           │    │
+│  └─────────────────────────────────────────────────────┘    │
+│                                                              │
+│  CAPA DE DATOS (Python)                                     │
+│  ┌─────────────────────────────────────────────────────┐    │
+│  │  data/                                             │    │
+│  │  ├── market_data.db # Base de datos de mercado     │    │
+│  │  ├── cache/         # Cache Redis/Memcached        │    │
+│  │  └── logs/          # Logs de operaciones          │    │
+│  └─────────────────────────────────────────────────────┘    │
+│                                                              │
+│  CAPA DE INFRAESTRUCTURA                                    │
+│  ┌─────────────────────────────────────────────────────┐    │
+│  │  config/                                           │    │
+│  │  ├── config.yaml    # Configuración principal      │    │
+│  │  ├── strategies.yaml# Estrategias                  │    │
+│  │  └── tokens.json    # Tokens soportados            │    │
+│  │                                                    │    │
+│  │  scripts/                                          │    │
+│  │  ├── setup.py      # Instalación                   │    │
+│  │  ├── deploy.py     # Despliegue                    │    │
+│  │  └── monitor.py    # Monitoreo                     │    │
+│  └─────────────────────────────────────────────────────┘    │
+└─────────────────────────────────────────────────────────────┘

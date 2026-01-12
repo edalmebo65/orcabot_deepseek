@@ -1,0 +1,11 @@
+C:\Users\edalm\Documents\TradingAlgoritmico\Orcabot_deepseek\rust\target\release\deps\ctr-90ee2c674248d745.d: C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ctr-0.8.0\src\lib.rs C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ctr-0.8.0\src\flavors.rs C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ctr-0.8.0\src\flavors\ctr128.rs C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ctr-0.8.0\src\flavors\ctr32.rs C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ctr-0.8.0\src\flavors\ctr64.rs
+
+C:\Users\edalm\Documents\TradingAlgoritmico\Orcabot_deepseek\rust\target\release\deps\libctr-90ee2c674248d745.rlib: C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ctr-0.8.0\src\lib.rs C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ctr-0.8.0\src\flavors.rs C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ctr-0.8.0\src\flavors\ctr128.rs C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ctr-0.8.0\src\flavors\ctr32.rs C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ctr-0.8.0\src\flavors\ctr64.rs
+
+C:\Users\edalm\Documents\TradingAlgoritmico\Orcabot_deepseek\rust\target\release\deps\libctr-90ee2c674248d745.rmeta: C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ctr-0.8.0\src\lib.rs C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ctr-0.8.0\src\flavors.rs C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ctr-0.8.0\src\flavors\ctr128.rs C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ctr-0.8.0\src\flavors\ctr32.rs C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ctr-0.8.0\src\flavors\ctr64.rs
+
+C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ctr-0.8.0\src\lib.rs:
+C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ctr-0.8.0\src\flavors.rs:
+C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ctr-0.8.0\src\flavors\ctr128.rs:
+C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ctr-0.8.0\src\flavors\ctr32.rs:
+C:\Users\edalm\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ctr-0.8.0\src\flavors\ctr64.rs:

@@ -1,40 +1,54 @@
-# python/rust_bridge.py
+"""
+Bridge entre Python y el módulo Rust para Orca.so
+"""
 import sys
-import os
 import json
 from pathlib import Path
-from typing import Dict, Any, List, Optional
+from typing import Dict, List, Optional, Any, Union
+import logging
 
-# Añadir el directorio de rust al path
-rust_build_path = Path(__file__).parent.parent / "rust" / "target" / "release"
-if rust_build_path.exists():
-    sys.path.insert(0, str(rust_build_path))
-
-try:
-    import orca_rust_bridge
-    RUST_AVAILABLE = True
-    print("✅ Módulo Rust cargado correctamente")
-except ImportError as e:
-    print(f"⚠️  No se pudo cargar el módulo Rust: {e}")
-    print("   Compilando módulo Rust...")
-    RUST_AVAILABLE = False
+logger = logging.getLogger(__name__)
 
 class OrcaRustBridge:
-    """Puente entre Python y Rust para Orca"""
+    """Wrapper para el módulo Rust"""
     
     def __init__(self, rpc_url: str = "https://api.mainnet-beta.solana.com"):
-        if RUST_AVAILABLE:
-            self.client = orca_rust_bridge.PyOrcaClient(rpc_url)
+        self.rpc_url = rpc_url
+        self.client = None
+        self.mode = "UNKNOWN"
+        
+        self._initialize()
+    
+    def _initialize(self):
+        """Inicializar el bridge Rust"""
+        try:
+            # Intentar importar el módulo Rust
+            import orca_rust_bridge
+            self.client = orca_rust_bridge.PyOrcaClient(self.rpc_url)
             self.mode = "RUST"
-        else:
+            
+            # Guardar constantes
+            self.constants = {
+                "WHIRLPOOL_PROGRAM_ID": orca_rust_bridge.WHIRLPOOL_PROGRAM_ID,
+                "SOL_MINT": orca_rust_bridge.SOL_MINT,
+                "USDC_MINT": orca_rust_bridge.USDC_MINT,
+                "USDT_MINT": orca_rust_bridge.USDT_MINT,
+                "ORCA_MINT": orca_rust_bridge.ORCA_MINT,
+            }
+            
+            logger.info("✅ Bridge Rust inicializado correctamente")
+            
+        except ImportError as e:
+            logger.warning(f"⚠️  No se pudo cargar módulo Rust: {e}")
             self.mode = "FALLBACK"
             self._setup_fallback()
     
     def _setup_fallback(self):
-        """Configurar fallback si Rust no está disponible"""
-        print("⚠️  Usando modo fallback (sin Rust)")
+        """Configurar modo fallback (Python puro)"""
+        logger.info("Usando modo fallback (Python puro)")
+        
         self.constants = {
-            "ORCA_WHIRLPOOL_PROGRAM_ID": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+            "WHIRLPOOL_PROGRAM_ID": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
             "SOL_MINT": "So11111111111111111111111111111111111111112",
             "USDC_MINT": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
             "USDT_MINT": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
@@ -42,102 +56,125 @@ class OrcaRustBridge:
         }
     
     def get_balance(self, wallet_address: str) -> Optional[int]:
-        """Obtener balance en lamports"""
-        if self.mode == "RUST":
+        """Obtener balance de SOL"""
+        if self.mode == "RUST" and self.client:
             try:
-                return self.client.get_balance_sync(wallet_address)
+                return self.client.get_balance(wallet_address)
             except Exception as e:
-                print(f"Error Rust: {e}")
+                logger.error(f"Error Rust get_balance: {e}")
                 return None
         else:
-            # Fallback: simular respuesta
-            return 1000000000  # 1 SOL en lamports
+            # Fallback: simulación
+            return 1000000000  # 1 SOL
     
-    def get_whirlpool_data(self, whirlpool_address: str) -> Optional[Dict[str, Any]]:
-        """Obtener datos de un whirlpool"""
-        if self.mode == "RUST":
+    def get_token_balance(self, wallet_address: str, mint_address: str) -> Optional[int]:
+        """Obtener balance de token"""
+        if self.mode == "RUST" and self.client:
             try:
-                data_json = self.client.get_whirlpool_data(whirlpool_address)
-                return json.loads(data_json)
+                return self.client.get_token_balance(wallet_address, mint_address)
             except Exception as e:
-                print(f"Error Rust: {e}")
+                logger.error(f"Error Rust get_token_balance: {e}")
                 return None
         else:
-            # Fallback
-            return {
-                "address": whirlpool_address,
-                "token_mint_a": self.constants["SOL_MINT"],
-                "token_mint_b": self.constants["USDC_MINT"],
-                "tick_spacing": 64,
-                "fee_rate": 300,
-                "protocol_fee_rate": 100,
-            }
+            # Fallback: simulación
+            return 1000000  # 1 USDC
     
     def get_swap_quote(
         self,
         input_mint: str,
         output_mint: str,
         amount: int,
-        slippage_bps: int = 50
+        slippage: float = 0.5
     ) -> Optional[Dict[str, Any]]:
         """Obtener cotización de swap"""
-        if self.mode == "RUST":
+        if self.mode == "RUST" and self.client:
             try:
-                quote_json = self.client.get_swap_quote(input_mint, output_mint, amount, slippage_bps)
+                quote_json = self.client.get_swap_quote(input_mint, output_mint, amount, slippage)
                 return json.loads(quote_json)
             except Exception as e:
-                print(f"Error Rust: {e}")
+                logger.error(f"Error Rust get_swap_quote: {e}")
                 return None
         else:
-            # Fallback
+            # Fallback: simulación
             return {
-                "estimated_amount_out": amount * 100,
-                "estimated_fee": amount * 3 // 1000,
-                "price_impact": 0.05,
-                "route": [input_mint, "whirlpool", output_mint],
-                "note": "Modo fallback - datos simulados",
+                "input_mint": input_mint,
+                "output_mint": output_mint,
+                "in_amount": amount,
+                "out_amount": amount * 100,  # 1 SOL = 100 USDC
+                "price_impact_pct": 0.05,
+                "fee_mint_a": amount * 3 // 1000,  # 0.3%
+                "fee_mint_b": 0,
             }
     
-    def find_whirlpools(self, token_a: str, token_b: str) -> Optional[List[Dict[str, Any]]]:
-        """Encontrar whirlpools para un par de tokens"""
-        if self.mode == "RUST":
+    def get_all_pools(self) -> List[Dict[str, Any]]:
+        """Obtener todos los pools"""
+        if self.mode == "RUST" and self.client:
             try:
-                pools_json = self.client.find_whirlpools(token_a, token_b)
+                pools_json = self.client.get_all_pools()
                 return json.loads(pools_json)
             except Exception as e:
-                print(f"Error Rust: {e}")
-                return None
+                logger.error(f"Error Rust get_all_pools: {e}")
+                return []
         else:
-            # Fallback
+            # Fallback: pools conocidos
+            return [
+                {
+                    "address": "2ZnVuidTHpi5WWKUwFXauYGhvdT9jRKYv5MDahtbwtYr",
+                    "token_a": self.constants["SOL_MINT"],
+                    "token_b": self.constants["USDC_MINT"],
+                    "lp_mint": "APDFRM3HMr8CAGXwKHiu2f5ePSpaiEJhaURwhsRrUUt9",
+                    "fee": 0.003,
+                },
+                {
+                    "address": "F13xvvx45jVGd84ynK3c8T89UejQVxjCLtmHfPmAXAHP",
+                    "token_a": self.constants["SOL_MINT"],
+                    "token_b": self.constants["USDT_MINT"],
+                    "lp_mint": "FZthQCuYHhcfiDma7QrX7buDHwrZEd7vL8SjS6LQa3Tx",
+                    "fee": 0.003,
+                }
+            ]
+    
+    def get_whirlpools(self) -> List[Dict[str, Any]]:
+        """Obtener whirlpools"""
+        if self.mode == "RUST" and self.client:
+            try:
+                whirlpools_json = self.client.get_whirlpools()
+                return json.loads(whirlpools_json)
+            except Exception as e:
+                logger.error(f"Error Rust get_whirlpools: {e}")
+                return []
+        else:
+            # Fallback: whirlpools conocidos
             return [
                 {
                     "address": "HJPjoWUrhoZzkNfRpHuieeFk9WcZWjwy6PBjZ81ngndJ",
-                    "token_mint_a": token_a,
-                    "token_mint_b": token_b,
+                    "token_mint_a": self.constants["SOL_MINT"],
+                    "token_mint_b": self.constants["USDC_MINT"],
                     "tick_spacing": 64,
                     "fee_rate": 300,
-                },
-                {
-                    "address": "7qbRF6YsyGuLUVs6Y1q64bdVrfe4ZcUUz1JRdoVNUJnm",
-                    "token_mint_a": token_a,
-                    "token_mint_b": token_b,
-                    "tick_spacing": 128,
-                    "fee_rate": 100,
-                },
+                    "liquidity": 1000000000000,
+                }
             ]
     
     @property
     def whirlpool_program_id(self) -> str:
-        """ID del programa Whirlpool"""
-        if self.mode == "RUST":
-            return self.client.whirlpool_program_id
-        else:
-            return self.constants["ORCA_WHIRLPOOL_PROGRAM_ID"]
+        return self.constants["WHIRLPOOL_PROGRAM_ID"]
+    
+    @property
+    def sol_mint(self) -> str:
+        return self.constants["SOL_MINT"]
+    
+    @property
+    def usdc_mint(self) -> str:
+        return self.constants["USDC_MINT"]
+    
+    @property
+    def usdt_mint(self) -> str:
+        return self.constants["USDT_MINT"]
+    
+    @property
+    def orca_mint(self) -> str:
+        return self.constants["ORCA_MINT"]
 
 # Instancia global
 orca_bridge = OrcaRustBridge()
-
-# Funciones de conveniencia
-def get_orca_bridge() -> OrcaRustBridge:
-    """Obtener instancia del puente"""
-    return orca_bridge
