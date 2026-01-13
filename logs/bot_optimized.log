@@ -1,0 +1,3 @@
+2026-01-12 17:44:51,981 - __main__ - ERROR -   • Clave privada no configurada en config.py
+2026-01-12 17:44:51,982 - __main__ - ERROR -   • Dirección de wallet no configurada en config.py
+2026-01-12 17:44:51,982 - __main__ - ERROR - Corrige config.py antes de continuar
