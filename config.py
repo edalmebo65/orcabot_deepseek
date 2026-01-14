@@ -1,230 +1,156 @@
-# config.py (versión mejorada con encriptación)
+# config.py - EN LA RAIZ DEL PROYECTO
+"""
+CONFIGURACIÓN SIMPLIFICADA - SIN .env, SIN .env.encrypted
+Todas las variables desde variables de entorno del sistema
+"""
 import os
 import base64
-import logging
-import sys
-import re
-from pathlib import Path
 from typing import Optional
-from cryptography.fernet import Fernet
-from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
-from dotenv import load_dotenv
 
-# Cargar variables de entorno
-load_dotenv()
+print("🔧 Cargando configuración desde variables de entorno...")
 
-class SecurityManager:
-    """Gestor de seguridad para encriptación/desencriptación"""
-    
-    @staticmethod
-    def derive_key_from_env() -> Optional[bytes]:
-        """Deriva la clave de encriptación desde variables de entorno"""
-        try:
-            password = os.getenv("ENCRYPTION_PASSWORD", "").strip()
-            salt_str = os.getenv("ENCRYPTION_SALT", "").strip()
-            
-            if not password or not salt_str:
-                logging.warning("ENCRYPTION_PASSWORD o ENCRYPTION_SALT no configurados")
-                return None
-            
-            salt = salt_str.encode()
-            
-            kdf = PBKDF2HMAC(
-                algorithm=hashes.SHA256(),
-                length=32,
-                salt=salt,
-                iterations=100000,
-            )
-            key = kdf.derive(password.encode())
-            return base64.urlsafe_b64encode(key)
-            
-        except Exception as e:
-            logging.error(f"Error derivando clave: {e}")
-            return None
-    
-    @classmethod
-    def get_decrypted_private_key(cls) -> Optional[str]:
-        """Obtiene y desencripta la clave privada"""
-        try:
-            encrypted_key_b64 = os.getenv("ENCRYPTED_PRIVATE_KEY", "").strip()
-            if not encrypted_key_b64:
-                logging.warning("ENCRYPTED_PRIVATE_KEY no configurada")
-                return None
-            
-            encryption_key = cls.derive_key_from_env()
-            if not encryption_key:
-                return None
-            
-            cipher = Fernet(encryption_key)
-            encrypted_key = base64.b64decode(encrypted_key_b64)
-            decrypted_key = cipher.decrypt(encrypted_key).decode()
-            
-            # Validar formato Base58
-            if not re.match(r'^[1-9A-HJ-NP-Za-km-z]+$', decrypted_key):
-                logging.error("Clave desencriptada no tiene formato Base58 válido")
-                return None
-            
-            return decrypted_key
-            
-        except Exception as e:
-            logging.error(f"Error desencriptando clave privada: {e}")
-            return None
+# ============================================================================
+# 🔐 1. ENCRIPTACIÓN (OBLIGATORIO)
+# ============================================================================
+ENCRYPTION_PASSWORD = os.environ.get('ENCRYPTION_PASSWORD', '')
+ENCRYPTION_SALT = os.environ.get('ENCRYPTION_SALT', '')
 
-class Config:
-    # --- Directorios ---
-    BASE_DIR = Path(os.getenv("BASE_DIR", "C:/Users/edalm/Documents/TradingAlgoritmico/OrcaBot_gemini"))
-    LOGS_DIR = BASE_DIR / "logs"
-    HISTORICO_DIR = BASE_DIR / "historico"
-    SECURITY_DIR = BASE_DIR / "security"
-    
-    # --- Identidad (con encriptación) ---
-    @property
-    def PRIVATE_KEY_B58(self) -> str:
-        """Propiedad que desencripta la clave privada bajo demanda"""
-        key = SecurityManager.get_decrypted_private_key()
-        if not key:
-            # Fallback a la variable original (solo para migración)
-            raw_key = os.getenv("PHANTOM_PRIVATE_KEY_BYTES", "").strip()
-            key = "".join(re.findall(r"[1-9A-HJ-NP-Za-km-z]", raw_key))
-            if key:
-                logging.warning("Usando clave privada en texto plano - MIGRAR A ENCRIPTACIÓN")
-        return key or ""
-    
-    @property
-    def WALLET_ADDRESS(self) -> str:
-        return os.getenv("PHANTOM_WALLET", "").strip()
-    
-    # --- Conectividad RPC ---
-    @property
-    def HELIUS_API_KEY(self) -> str:
-        return os.getenv("HELIUS_VOICEINDIGO_API_KEY", "").strip()
-    
-    @property
-    def HELIUS_BASE(self) -> str:
-        return os.getenv("HELIUS_BASE_URL", "https://mainnet.helius-rpc.com").strip()
-    
-    @property
-    def RPC_FULL_URL(self) -> str:
-        return f"{self.HELIUS_BASE}/?api-key={self.HELIUS_API_KEY}"
-    
-    # --- Telegram ---
-    @property
-    def TELEGRAM_BOT_TOKEN(self) -> str:
-        return os.getenv("TELEGRAM_BOT_TOKEN", "").strip()
-    
-    @property
-    def TELEGRAM_CHAT_ID(self) -> str:
-        return os.getenv("TELEGRAM_CHAT_ID", "").strip()
-    
-    @property
-    def TELEGRAM_ADMIN_ID(self) -> str:
-        return os.getenv("TELEGRAM_ADMIN_ID", "").strip()
-    
-    # --- Trading Parameters ---
-    @property
-    def MAX_POSITION_SIZE_USD(self) -> float:
-        return float(os.getenv("MAX_POSITION_SIZE_USD", "1000"))
-    
-    @property
-    def MAX_PORTFOLIO_EXPOSURE(self) -> float:
-        return float(os.getenv("MAX_PORTFOLIO_EXPOSURE", "0.15"))
-    
-    @property
-    def DAILY_LOSS_LIMIT(self) -> float:
-        return float(os.getenv("DAILY_LOSS_LIMIT", "0.02"))
-    
-    @property
-    def MIN_PROFIT_MARGIN(self) -> float:
-        return float(os.getenv("MIN_PROFIT_MARGIN", "0.002"))
-    
-    # --- ML Parameters ---
-    @property
-    def ML_CONFIDENCE_THRESHOLD(self) -> float:
-        return float(os.getenv("ML_CONFIDENCE_THRESHOLD", "0.68"))
-    
-    @property
-    def ML_SEQUENCE_LENGTH(self) -> int:
-        return int(os.getenv("ML_SEQUENCE_LENGTH", "60"))
-    
-    # --- Logging ---
-    @property
-    def LOG_LEVEL(self) -> str:
-        return os.getenv("LOG_LEVEL", "INFO").strip().upper()
-    
-    @classmethod
-    def setup_directories(cls):
-        """Crea todos los directorios necesarios"""
-        directories = [
-            cls.LOGS_DIR,
-            cls.HISTORICO_DIR,
-            cls.SECURITY_DIR,
-            cls.HISTORICO_DIR / "ohlcv",
-            cls.HISTORICO_DIR / "ml_features",
-            cls.HISTORICO_DIR / "trades",
-            cls.HISTORICO_DIR / "models",
-        ]
-        
-        for directory in directories:
-            directory.mkdir(parents=True, exist_ok=True)
+# Si no están, pedirlas interactivamente
+if not ENCRYPTION_PASSWORD:
+    print("⚠️ ENCRYPTION_PASSWORD no encontrada")
+    ENCRYPTION_PASSWORD = input("Ingresa ENCRYPTION_PASSWORD (min 32 chars): ")
 
-# Inicializar configuración
-Config.setup_directories()
+if not ENCRYPTION_SALT:
+    print("⚠️ ENCRYPTION_SALT no encontrada")
+    ENCRYPTION_SALT = input("Ingresa ENCRYPTION_SALT (min 16 chars): ")
 
-# Configurar logging
-log_level = getattr(logging, Config.LOG_LEVEL, logging.INFO)
+# Validar
+if len(ENCRYPTION_PASSWORD) < 32:
+    raise ValueError("ENCRYPTION_PASSWORD debe tener al menos 32 caracteres")
+if len(ENCRYPTION_SALT) < 16:
+    raise ValueError("ENCRYPTION_SALT debe tener al menos 16 caracteres")
 
-logging.basicConfig(
-    level=log_level,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.FileHandler(Config.LOGS_DIR / "bot.log"),
-        logging.StreamHandler(sys.stdout),
-        logging.FileHandler(Config.LOGS_DIR / "security.log")  # Log de seguridad separado
-    ]
-)
+ENCRYPTION_ITERATIONS = int(os.environ.get('ENCRYPTION_ITERATIONS', '480000'))
 
-# Logger principal
-LOGGER = logging.getLogger("OrcaBot")
+# ============================================================================
+# 🏦 2. WALLET PHANTOM (OBLIGATORIO)
+# ============================================================================
+PHANTOM_PRIVATE_KEY_BYTES = os.environ.get('PHANTOM_PRIVATE_KEY_BYTES', '')
+PHANTOM_WALLET = os.environ.get('PHANTOM_WALLET', '')
 
-# Logger de seguridad (separado)
-SECURITY_LOGGER = logging.getLogger("OrcaBot.Security")
-security_handler = logging.FileHandler(Config.LOGS_DIR / "security_audit.log")
-security_handler.setFormatter(logging.Formatter('%(asctime)s - SECURITY - %(message)s'))
-SECURITY_LOGGER.addHandler(security_handler)
-SECURITY_LOGGER.propagate = False
+if not PHANTOM_PRIVATE_KEY_BYTES:
+    print("⚠️ PHANTOM_PRIVATE_KEY_BYTES no encontrada")
+    PHANTOM_PRIVATE_KEY_BYTES = input("Ingresa PHANTOM_PRIVATE_KEY_BYTES: ")
 
-# Instancia de configuración
-CONFIG = Config()
+if not PHANTOM_WALLET:
+    print("⚠️ PHANTOM_WALLET no encontrada")
+    PHANTOM_WALLET = input("Ingresa PHANTOM_WALLET: ")
 
-# Validación inicial de configuración
+PHANTOM_PUBLIC_KEY = os.environ.get('PHANTOM_PUBLIC_KEY', PHANTOM_WALLET)
+
+# ============================================================================
+# 🌐 3. RPC HELIUS (OPCIONAL)
+# ============================================================================
+HELIUS_VOICEINDIGO_API_KEY = os.environ.get('HELIUS_VOICEINDIGO_API_KEY', '')
+HELIUS_BASE_URL = "https://mainnet.helius-rpc.com"
+
+# Si no hay clave Helius, usar RPC público
+if not HELIUS_VOICEINDIGO_API_KEY:
+    print("⚠️ Sin clave Helius, usando RPC público")
+    HELIUS_BASE_URL = "https://api.mainnet-beta.solana.com"
+
+# ============================================================================
+# 🤖 4. TELEGRAM (OPCIONAL)
+# ============================================================================
+TELEGRAM_BOT_TOKEN = os.environ.get('TELEGRAM_BOT_TOKEN', '')
+TELEGRAM_CHAT_ID = os.environ.get('TELEGRAM_CHAT_ID', '')
+TELEGRAM_ENABLED = bool(TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID)
+
+# ============================================================================
+# 💰 5. TRADING (VALORES POR DEFECTO)
+# ============================================================================
+INITIAL_CAPITAL_USD = float(os.environ.get('INITIAL_CAPITAL_USD', '1000'))
+MIN_USDC_BALANCE = float(os.environ.get('MIN_USDC_BALANCE', '10'))
+MIN_SOL_FEES = float(os.environ.get('MIN_SOL_FEES', '0.05'))
+POSITION_SIZE_PERCENT = float(os.environ.get('POSITION_SIZE_PERCENT', '0.10'))
+MAX_CONCURRENT_TRADES = int(os.environ.get('MAX_CONCURRENT_TRADES', '5'))
+
+# ============================================================================
+# 🎯 6. RIESGO (VALORES POR DEFECTO)
+# ============================================================================
+STOP_LOSS_PERCENT = float(os.environ.get('STOP_LOSS_PERCENT', '2.0'))
+TAKE_PROFIT_PERCENT = float(os.environ.get('TAKE_PROFIT_PERCENT', '5.0'))
+DAILY_LOSS_LIMIT_PERCENT = float(os.environ.get('DAILY_LOSS_LIMIT_PERCENT', '2.0'))
+MAX_DRAWDOWN_PERCENT = float(os.environ.get('MAX_DRAWDOWN_PERCENT', '15.0'))
+
+# ============================================================================
+# 🧠 7. MACHINE LEARNING (VALORES POR DEFECTO)
+# ============================================================================
+ML_CONFIDENCE_THRESHOLD = float(os.environ.get('ML_CONFIDENCE_THRESHOLD', '0.65'))
+TRAINING_INTERVAL_HOURS = int(os.environ.get('TRAINING_INTERVAL_HOURS', '12'))
+
+# ============================================================================
+# 📊 8. UTILIDADES
+# ============================================================================
+def get_private_key() -> Optional[bytes]:
+    """Obtener clave privada en formato bytes"""
+    if not PHANTOM_PRIVATE_KEY_BYTES:
+        return None
+    
+    try:
+        # Si parece base64, decodificar
+        if '=' in PHANTOM_PRIVATE_KEY_BYTES or (len(PHANTOM_PRIVATE_KEY_BYTES) % 4 == 0):
+            return base64.b64decode(PHANTOM_PRIVATE_KEY_BYTES)
+        # Sino, asumir que ya es string de bytes
+        return PHANTOM_PRIVATE_KEY_BYTES.encode('utf-8')
+    except:
+        return None
+
 def validate_config():
-    """Valida que la configuración mínima esté presente"""
+    """Validar configuración mínima"""
     errors = []
     
-    if not CONFIG.PRIVATE_KEY_B58:
-        errors.append("Clave privada no configurada o no pudo desencriptarse")
-    
-    if not CONFIG.WALLET_ADDRESS:
-        errors.append("Dirección de wallet no configurada")
-    
-    if not CONFIG.HELIUS_API_KEY:
-        errors.append("API Key de Helius no configurada")
-    
-    if not CONFIG.TELEGRAM_BOT_TOKEN and CONFIG.TELEGRAM_BOT_TOKEN != "optional":
-        errors.append("Token de Telegram bot no configurado")
+    if not ENCRYPTION_PASSWORD:
+        errors.append("ENCRYPTION_PASSWORD")
+    if not ENCRYPTION_SALT:
+        errors.append("ENCRYPTION_SALT")
+    if not PHANTOM_PRIVATE_KEY_BYTES:
+        errors.append("PHANTOM_PRIVATE_KEY_BYTES")
+    if not PHANTOM_WALLET:
+        errors.append("PHANTOM_WALLET")
     
     if errors:
-        error_msg = "Errores de configuración:\n" + "\n".join(f"  • {e}" for e in errors)
-        LOGGER.error(error_msg)
-        raise ValueError(error_msg)
+        print(f"❌ Faltan variables: {', '.join(errors)}")
+        return False
     
-    LOGGER.info("✅ Configuración validada exitosamente")
-    SECURITY_LOGGER.info(f"Bot inicializado para wallet: {CONFIG.WALLET_ADDRESS[:8]}...")
+    return True
 
-# Ejecutar validación al importar
-try:
-    validate_config()
-except ValueError as e:
-    LOGGER.critical(f"Configuración inválida: {e}")
-    # No salir aquí para permitir tests, pero loguear crítico
+def print_summary():
+    """Mostrar resumen de configuración"""
+    print("\n" + "="*60)
+    print("📋 RESUMEN DE CONFIGURACIÓN")
+    print("="*60)
+    print(f"👛 Wallet: {PHANTOM_WALLET[:8]}...")
+    print(f"🌐 RPC: {'Helius' if HELIUS_VOICEINDIGO_API_KEY else 'Público'}")
+    print(f"🤖 Telegram: {'Sí' if TELEGRAM_ENABLED else 'No'}")
+    print(f"💰 Capital: ${INITIAL_CAPITAL_USD}")
+    print(f"🎯 Posición: {POSITION_SIZE_PERCENT*100}%")
+    print(f"🛑 Stop Loss: {STOP_LOSS_PERCENT}%")
+    print(f"📈 Take Profit: {TAKE_PROFIT_PERCENT}%")
+    print(f"🧠 ML Confianza: {ML_CONFIDENCE_THRESHOLD*100}%")
+    print("="*60)
+
+# ============================================================================
+# 🚀 EJECUCIÓN DIRECTA
+# ============================================================================
+if __name__ == "__main__":
+    if validate_config():
+        print("✅ Configuración válida")
+        print_summary()
+    else:
+        print("\n💡 Configura las variables de entorno:")
+        print("   set ENCRYPTION_PASSWORD=tu_password_32_chars")
+        print("   set ENCRYPTION_SALT=tu_salt_16_chars")
+        print("   set PHANTOM_PRIVATE_KEY_BYTES=tu_clave_base64")
+        print("   set PHANTOM_WALLET=tu_direccion")
+        print("\nO ejecuta: python setup_vars.py")

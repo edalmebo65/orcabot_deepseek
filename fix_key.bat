@@ -1,0 +1,22 @@
+@echo off
+echo 🤖 ACTUALIZANDO CLAVE PRIVADA CORREGIDA
+echo.
+
+:: 🔐 CLAVE PRIVADA CORREGIDA (64 bytes)
+set PHANTOM_PRIVATE_KEY_BYTES=5jA8QQR4Lbg4TnhfXf1f3UgCABefxgroAJHp2B95ABKbTGpd9mbmhxTgv1sRXkp2f5KLGHxRoo5gw4GRsT9hQQ==
+set PHANTOM_WALLET=5TRffdvmjCDoiGjSYmsPtbjXZ33ekVPyFxfVHHModgt7
+set PHANTOM_PUBLIC_KEY=5TRffdvmjCDoiGjSYmsPtbjXZ33ekVPyFxfVHHModgt7
+
+:: 🔐 MANTENER ENCRIPTACIÓN EXISTENTE
+if not "%ENCRYPTION_PASSWORD%"=="" set ENCRYPTION_PASSWORD=%ENCRYPTION_PASSWORD%
+if not "%ENCRYPTION_SALT%"=="" set ENCRYPTION_SALT=%ENCRYPTION_SALT%
+
+:: 🌐 MANTENER HELIUS
+if not "%HELIUS_VOICEINDIGO_API_KEY%"=="" set HELIUS_VOICEINDIGO_API_KEY=%HELIUS_VOICEINDIGO_API_KEY%
+
+echo ✅ Clave corregida a 64 bytes
+echo.
+echo 📋 Verificar: python config.py
+echo 💰 Check balances: python check_balances_fixed.py
+echo.
+pause
